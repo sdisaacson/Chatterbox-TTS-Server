@@ -10,6 +10,9 @@ on:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
+    # Make HF_TOKEN available to all steps in this job (comes from repo secret)
+    env:
+      HF_TOKEN: ${{ secrets.HF_TOKEN }}
 
     steps:
       - name: Checkout repository
@@ -41,13 +44,15 @@ jobs:
       - name: Build images with docker-compose
         env:
           IMAGE_TAG: ${{ steps.tag.outputs.tag }}
+          # HF_TOKEN inherited from job env (from secrets)
         run: |
-          # docker-compose will read ${IMAGE_TAG} if you use it in your compose file
+          # Do not print HF_TOKEN — it's a secret
           docker compose -f docker-compose.yml build --parallel
 
       - name: Push images with docker-compose
         env:
           IMAGE_TAG: ${{ steps.tag.outputs.tag }}
+          # HF_TOKEN inherited from job env (from secrets)
         run: |
           docker compose -f docker-compose.yml push
 
