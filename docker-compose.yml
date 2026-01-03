@@ -12,6 +12,7 @@ services:
     environment:
       # make HF_TOKEN available at container runtime
       - HF_TOKEN=${HF_TOKEN}
+      - HF_HUB_ENABLE_HF_TRANSFER=1
     ports:
       - "${PORT:-8004}:8004"
     volumes:
@@ -41,16 +42,6 @@ services:
 
     # Method 2: Legacy Docker Compose (for older setups)
     # runtime: nvidia
-
-    restart: unless-stopped
-    environment:
-      - HF_TOKEN=YOUR_TOKEN_HERE
-      # Enable faster Hugging Face downloads inside the container
-      - HF_HUB_ENABLE_HF_TRANSFER=1
-      # Make NVIDIA GPUs visible and specify capabilities for PyTorch
-      - NVIDIA_VISIBLE_DEVICES=all
-      - NVIDIA_DRIVER_CAPABILITIES=compute,utility
-
 # Define the named volume for the Hugging Face cache
 volumes:
   hf_cache:
