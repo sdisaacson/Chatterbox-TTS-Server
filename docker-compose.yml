@@ -1,13 +1,17 @@
-version: '3.8'
-
+version: "3.9"
 services:
-  chatterbox-tts-server:
+  app:
     build:
-      args:
-      # Can be nvidia or cpu; Default is Nvidia
-        - RUNTIME=nvidia
       context: .
       dockerfile: Dockerfile
+      args:
+        # make HF_TOKEN available during image build (so Dockerfile can use it)
+        HF_TOKEN: ${HF_TOKEN}
+        - RUNTIME=nvidia
+    image: docker.io/scott292/meeting-notes:${IMAGE_TAG}
+    environment:
+      # make HF_TOKEN available at container runtime
+      - HF_TOKEN=${HF_TOKEN}
     ports:
       - "${PORT:-8004}:8004"
     volumes:
